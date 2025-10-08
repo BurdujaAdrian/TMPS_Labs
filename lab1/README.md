@@ -10,26 +10,26 @@ The intent is to make software:
 - easier to maintain/test
 - extendable
 
-### Single Responsibility Principle
+#### Single Responsibility Principle
 - Every piece of software (i.e. module, class or function) should be responsible over a single part of functionality provided by the software.
 - Being responsible only for one thing, it will have only one reason to change.
 
-### Open Closed Principle
+#### Open Closed Principle
 - Each piece of software should be open for extension and closed for modification.
 - The behavior should be extended without needing to modify the internals.
 
-### Liskov Substitution Principle
+#### Liskov Substitution Principle
 - Objects of a class should be substitutable with instances of the existing subclasses, without altering the functionalities of the software.
 
-### Interface Segregation Principle
+#### Interface Segregation Principle
 - A client shouldn’t be forced to implement an interface, or methods from an interface, that it doesn’t use.
 - It is recommended to split larger interfaces into multiple smaller ones.
 
-### Dependency Inversion Principle
+#### Dependency Inversion Principle
 - Software entities must depend on abstractions, not on concrete things. 
 - Separate modules, that are located on different levels must not depend directly on each other, but should rely on abstractions.
 
-### Intrusive interface
+#### Intrusive interface
 An intrusive interface is an interface that is implemented by adding the virtual table
 as the members of the class/struct directly. 
 
@@ -104,7 +104,7 @@ Add :: proc(b: $T) -> ^op(T) {
 }
 ```
 
-### Example program:
+#### Example program:
 ```odin
 package main
 import "calc"
@@ -154,20 +154,20 @@ main :: proc() {
 ```
 
 
-### SPR
+#### SPR
 Is adhered because each struct or interface has only 1 responsibility:
 `Calculator` calculates the list of added operations
 `op` is an interface representing a single operation
 Concrete implementation `Addition` is only responsible for the operation of addition
 
 
-### OCP
+#### OCP
 Is adhered because, to add a new operation, the user must write only the struct and the
 implementation of the interface,they do not have to modify `op` directly nor `Calculator`
 
 In essence, Calculator is open to extension(by implementing the `op` interface), but closed for modification(the struct is private).
 
-### DIP
+#### DIP
 `Calculator` only depends on the interface `op`, instead of concrete implementations.
 
 

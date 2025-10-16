@@ -33,18 +33,22 @@ new_builder :: #force_inline proc() -> (b: Builder) {return}
 
 
 set_type :: #force_inline proc(self: ^Builder, $type: string) {
+	fmt.println("Adding type:" + type)
 	self.type = type
 }
 
 set_recipient :: #force_inline proc(self: ^Builder, $recipient: string) {
+	fmt.println("Adding recipient:" + recipient)
 	self.recipient = recipient
 }
 
 set_message :: #force_inline proc(self: ^Builder, $msg: string) {
+	fmt.println("Adding message:" + msg)
 	self.message = msg
 }
 
 set_priority :: #force_inline proc(self: ^Builder, $prio: string) {
+	fmt.println("Adding priority:" + prio)
 	self.priority = prio
 }
 
@@ -90,7 +94,7 @@ create_email_notif :: #force_inline proc($rec, $subj: string) -> (^Notif, bool) 
 	builder: Builder
 	set_type(&builder, "EMAIL")
 	set_recipient(&builder, rec)
-	set_message(&builder, "Email: %s" + subj)
+	set_message(&builder, "Email:" + subj)
 	set_priority(&builder, "MEDIUM")
 
 	return build(&builder)
@@ -100,7 +104,7 @@ create_sms_notif :: #force_inline proc($rec, $title: string) -> (^Notif, bool) {
 	builder: Builder
 	set_type(&builder, "SMS")
 	set_recipient(&builder, rec)
-	set_message(&builder, "SMS: %s" + title)
+	set_message(&builder, "SMS:" + title)
 	set_priority(&builder, "HIGH")
 
 	return build(&builder)
@@ -110,7 +114,7 @@ create_push_notif :: #force_inline proc($rec, $title: string) -> (^Notif, bool) 
 	builder: Builder
 	set_type(&builder, "PUSH")
 	set_recipient(&builder, rec)
-	set_message(&builder, "Push: %s" + title)
+	set_message(&builder, "Push:" + title)
 	set_priority(&builder, "LOW")
 
 	return build(&builder)
@@ -120,7 +124,7 @@ create_urgent_notif :: #force_inline proc($type, $rec, $title: string) -> (^Noti
 	builder: Builder
 	set_type(&builder, "PUSH")
 	set_recipient(&builder, rec)
-	set_message(&builder, "Push: %s" + title)
+	set_message(&builder, "Push:" + title)
 	set_priority(&builder, "LOW")
 
 	return build(&builder)

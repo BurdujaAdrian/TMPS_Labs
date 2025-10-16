@@ -212,7 +212,6 @@ main :: proc() {
 Ouput of the demo:
 ```
 
-
 ==========
 Singleton:
 ==========
@@ -224,12 +223,24 @@ New singleton created
 Using factory procedures:
 ==========
 
+Adding type:EMAIL
+Adding recipient:jonndoe@mail.com
+Adding message:Email:Welcome to our service
+Adding priority:MEDIUM
 Sending notification...
 Notification sent!
 Total notifications sent: 1
+Adding type:SMS
+Adding recipient:+123456789
+Adding message:SMS:Your login code: 454
+Adding priority:HIGH
 Sending notification...
 Notification sent!
 Total notifications sent: 2
+Adding type:PUSH
+Adding recipient:user123
+Adding message:Push:New messege
+Adding priority:LOW
 Sending notification...
 Notification sent!
 Total notifications sent: 3
@@ -239,6 +250,10 @@ Total notifications sent: 3
 Using the builder:
 ==========
 
+Adding type:EMAIL
+Adding recipient:template@mail.com
+Adding message:Lorem Ipsum dolorem
+Adding priority:MEDIUM
 
 
 ==========
@@ -270,7 +285,7 @@ Cloned: &Notif{
 &Notif{
         type = "EMAIL",
         recipient = "jonndoe@mail.com",
-        message = "Email: %sWelcome to our service",
+        message = "Email:Welcome to our service",
         priority = "MEDIUM",
         timestamp = Date{
                 year = 2025,
@@ -281,7 +296,7 @@ Cloned: &Notif{
 &Notif{
         type = "SMS",
         recipient = "+123456789",
-        message = "SMS: %sYour login code: 454",
+        message = "SMS:Your login code: 454",
         priority = "HIGH",
         timestamp = Date{
                 year = 2025,
@@ -292,7 +307,7 @@ Cloned: &Notif{
 &Notif{
         type = "PUSH",
         recipient = "user123",
-        message = "Push: %sNew messege",
+        message = "Push:New messege",
         priority = "LOW",
         timestamp = Date{
                 year = 2025,

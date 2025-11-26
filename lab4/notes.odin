@@ -1,11 +1,20 @@
 package main
-
 import ma "vendor:miniaudio"
 
-Note :: struct {
-	sound:    ^ma.sound,
-	duration: u64,
-	start:    u64,
+// #iterator
+Iterator :: struct($T: typeid) {
+	items:   T,
+	counter: int,
+}
+
+into_iter :: proc(items: []$T) -> Iterator([]T) {
+	return {items, 0}
+}
+
+next :: proc(iter: ^Iterator($A/[]$T)) -> (item: T, ok: bool) {
+	iter.counter += 1
+	if iter.counter > len(iter.items) do return
+	return iter.items[iter.counter - 1], true
 }
 
 // #command
@@ -15,7 +24,8 @@ Cmd :: struct {
 }
 
 exec_all :: proc(ctx: ^Play_context, cmds: []^Cmd) -> bool {
-	for cmd in cmds {
+	cmds := into_iter(cmds)
+	for cmd in next(&cmds) {
 		if !cmd->exec(ctx) {return false}
 		cmd->free()
 	}

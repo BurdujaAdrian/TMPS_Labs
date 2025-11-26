@@ -19,5 +19,6 @@ main :: proc() {
 
 	exec_all(ctx, commands[:])
 
+
 	play(ctx)
 }

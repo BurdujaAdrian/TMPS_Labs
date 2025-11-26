@@ -16,12 +16,14 @@
 ## Used Design Patterns: 
 
 * command
+* iterator
+* strategy
 
 ## Implementation
 
 I wrote a library to write and play music.
-The command pattern is used to define how create the sounds
 
+The command pattern is used to define how create the sounds.
 All commands implement the interface:
 ```odin
 // #command
@@ -31,7 +33,7 @@ Cmd :: struct {
 }
 ```
 
-An array of commands can be executed with:
+An array of commands can be executed with the use of the iterator pattern:
 ```odin
 exec_all :: proc(ctx: ^Play_context, cmds: []^Cmd) -> bool {
 	for cmd in cmds {
@@ -85,6 +87,45 @@ free_note_cmd :: proc(cmd: ^Cmd) {
 }
 ```
 
+I've also implemented Iterator pattern, by levereging polymorthism
+```odin
+// #iterator
+Iterator :: struct($T: typeid) {
+	items:   T,
+	counter: int,
+}
+
+into_iter :: proc(items: []$T) -> Iterator([]T) { return {items, 0} }
+
+next :: proc(iter: ^Iterator($A/[]$T)) -> (item: T, ok: bool) {
+	iter.counter += 1
+	if iter.counter > len(iter.items) do return
+	return iter.items[iter.counter - 1], true
+}
+```
+
+In order to generalise how sounds are created, I factored out the wave logic into 
+different strategies:
+```odin
+// #strategy
+Wave_strategy :: struct {
+	generate: proc(_: ^Wave_strategy, _: ^ma.engine, _: f64, _: f64) -> (^ma.sound, ma.result),
+}
+Square_wave :: struct { using base: Wave_strategy, }
+Sine_wave :: struct { using base: Wave_strategy, }
+new_square_wave :: proc() -> ^Wave_strategy {
+	return new_clone(Square_wave{{gen_square}})
+}
+new_sine_wave :: proc() -> ^Wave_strategy {
+	return new_clone(Sine_wave{{gen_sine}})
+}
+gen_square :: proc(s: ^Wave_strategy, e: ^ma.engine, fr, amp: f64) -> (^ma.sound, ma.result) {
+	return init_sound(e, fr, amp, .square)
+}
+gen_sine :: proc(s: ^Wave_strategy, e: ^ma.engine, fr, amp: f64) -> (^ma.sound, ma.result) {
+	return init_sound(e, fr, amp, .sine)
+}
+```
 
 ## Demo program
 ```odin
@@ -98,6 +139,15 @@ main :: proc() {
 	append(&commands, new_chord_cmd(ctx, {G4, F4, DS4}, {0.1, 0.1, 0.1}, 1, 0.5))
 
 	exec_all(ctx, commands[:])
+	delete(commands)
+
+	ctx.wave_gen = new_square_wave()
+
+	append(&commands, new_note_cmd(ctx, F4, 0.1, 1.5, 0.5))
+	append(&commands, new_chord_cmd(ctx, {G4, F4, DS4}, {0.1, 0.1, 0.1}, 2, 0.5))
+
+	exec_all(ctx, commands[:])
+	
 
 	play(ctx)
 }
@@ -107,10 +157,20 @@ Output: some sounds
 
 
 ## Conclusions
-In this laboratory I have implemented the command pattern for my music library.
-This patern is usefull to define the parameters of a computation without actually
-executing it, as well as agregating multiple such commands to be executed later,
-at the same time.
+In this laboratory I have implemented the command,iterator and strategy patterns for my
+music library. 
 
-For this laboratory, I used the pattern in order to be able to define different types
-of commands(computations) and let them be executed sequentially together.
+The command pattern is usefull to define the parameters of a computation
+without actually executing it, as well as agregating multiple such commands to be 
+executed later,at the same time.
+For this laboratory, I used the command pattern in order to be able to define different
+types of commands(computations) and let them be executed sequentially together.
+
+The iterator pattern is used to define how to iterate over a collection of objects
+in a correct way and decoupled from the implementation of the objects themselves.
+Here, I use the generic iterator to be able to iterate over any collection.
+
+The strategy pattern can be used to define an interface for an algorithm and let the 
+user implement multiple different implementations for it, which can be substituted at
+runtime as needed. For my library, I use it to change the strategy of sound generation
+for different wave forms.

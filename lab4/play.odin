@@ -5,8 +5,9 @@ import "core:fmt"
 import ma "vendor:miniaudio"
 
 Play_context :: struct {
-	engine: ^ma.engine,
-	sounds: [dynamic]^ma.sound,
+	engine:   ^ma.engine,
+	wave_gen: ^Wave_strategy,
+	sounds:   [dynamic]^ma.sound,
 }
 
 Play_error :: struct {
@@ -31,13 +32,12 @@ play :: proc(ctx: ^Play_context) {
 		return
 	}
 
-
 	libc.getwchar()
 
 }
 
 reg_note :: proc(ctx: ^Play_context, freq, amp, start, duration: f64) -> bool {
-	new_sound, err := init_sound(ctx.engine, freq, amp)
+	new_sound, err := ctx.wave_gen->generate(ctx.engine, freq, amp)
 
 	if err != nil {
 		return false
@@ -63,6 +63,7 @@ pcontext_init :: proc(measure: [2]u8 = {4, 4}) -> (pc: ^Play_context, err: Play_
 	engine_conf.noAutoStart = true
 
 	pc.engine = new(ma.engine)
+	pc.wave_gen = new_sine_wave()
 
 	if err := ma.engine_init(&engine_conf, pc.engine); err != nil {
 		return nil, {.Failed_engine_init, err}

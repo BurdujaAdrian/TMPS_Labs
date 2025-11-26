@@ -138,7 +138,6 @@ Encrypted_Notif :: struct {
 	set_msg:    set_proc,
 	encrypt:    proc(_: string) -> string,
 }
-
 send_encrypted :: proc(self: ^INotif, cleanup: bool) {
 	self := cast(^Encrypted_Notif)self
 	plain_text := self->get_msg()

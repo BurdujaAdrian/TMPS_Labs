@@ -209,6 +209,7 @@ In this laboratory I successfully implemented 3 structural design patterns:
 composite, decorator and facade in order to further extend the functionality
 of the notification system. The composite pattern allows me to group notifications
 together and send them all at the same time as well as treating a batch notification
-as any other notification. The decorator pattern allowed me to add extra behavior to notifications by simply wrapping the original object.
+as any other notification. The decorator pattern allowed me to add extra behavior to 
+notifications by simply wrapping the original object.
 to notifications by simply wrapping the original object. The facade pattern simplified
 the usage of all of the above patterns by providing a streamlined interface.
